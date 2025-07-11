@@ -1,4 +1,3 @@
-import { PROPERTYLISTINGSAMPLE } from './../constants/index';
 export interface CardProps {
   title: string;
   image: string;
@@ -32,10 +31,20 @@ export interface PropertyProps {
   offers: Offers;
   image: string;
   discount: string;
+  description?: string;
+  images?: string[];
+  reviews?: Review[];
 }
 
 export interface PillProps {
   label: string;
   onClick: () => void;
   isActive: boolean;
+}
+
+export interface Review {
+  name: string;
+  avatar: string;
+  rating: number;
+  comment: string;
 }
