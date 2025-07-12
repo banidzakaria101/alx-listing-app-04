@@ -38,7 +38,7 @@ const PropertyDetail: React.FC<{ property: PropertyProps }> = ({ property }) => 
         </div>
 
         {/* Reviews */}
-        {property.reviews && <ReviewSection reviews={property.reviews} />}
+        <ReviewSection propertyId={property.id} />
       </div>
 
       {/* Right Column (Booking Sidebar) */}
