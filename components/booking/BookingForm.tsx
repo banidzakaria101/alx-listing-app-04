@@ -1,75 +1,198 @@
-const BookingForm = () => (
-    <div className="bg-white p-6 shadow-md rpunded-lg">
-        <h2 className="text-xl font-semibold">Contact Details</h2>
-        {/* Contact Form */}
-        <form>
-            <div className="grid grid-cols-2 gap-4">
-                <div>
-                    <label>First Name</label>
-                    <input type="text" className="border p-2 w-full mt-2" />
-                </div>
+import React, { useState } from "react";
+import axios from "axios";
 
-                <div>
-                    <label>Last Name</label>
-                    <input type="text" className="border p-2 w-full mt-2" />
-                </div>
-            </div>
+const BookingForm = () => {
+  const [formData, setFormData] = useState({
+    firstName: "",
+    lastName: "",
+    email: "",
+    cardNumber: "",
+    expirationDate: "",
+    cvv: "",
+    streetAddress: "",
+    city: "",
+    state: "",
+    country: "",
+  });
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                    <label>Email</label>
-                    <input type="email" className="border p-2 w-full mt-2" />
-                </div>
-            </div>
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
-            {/* Payment Information */}
-            <h2 className="text-xl font-semibold mt-6">Pay With</h2>
-            <div className="mt-4">
-                <label>Card Number</label>
-                <input type="text" className="border p-2 w-full mt-2" />
-            </div>
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                    <label>Expiration Date</label>
-                    <input type="text" className="border p-2 w-full mt-2" />
-                </div>
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    setError(null);
+    setSuccess(null);
 
-                <div>
-                    <label>CVV</label>
-                    <input type="text" className="border p-2 w-full mt-2" />
-                </div>
-            </div>
+    try {
+      await axios.post("/api/bookings", formData);
+      setSuccess("Booking confirmed!");
+      setFormData({
+        firstName: "",
+        lastName: "",
+        email: "",
+        cardNumber: "",
+        expirationDate: "",
+        cvv: "",
+        streetAddress: "",
+        city: "",
+        state: "",
+        country: "",
+      });
+    } catch (err) {
+      setError("Failed to submit booking.");
+    } finally {
+      setLoading(false);
+    }
+  };
 
-            {/* Builling Address */}
-            <h2 className="text-xl font-semibold mt-6">Builling Address</h2>
-            <div className="mt-4">
-                <label>Street Address</label>
-                <input type="text" className="border p-2 w-full mt-2" />
-            </div>
-            <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                    <label>City</label>
-                    <input type="text" className="border p-2 w-full mt-2" />
-                </div>
+  return (
+    <div className="bg-white p-6 shadow-md rounded-lg">
+      <h2 className="text-xl font-semibold">Contact Details</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="grid grid-cols-2 gap-4">
+          <div>
+            <label>First Name</label>
+            <input
+              name="firstName"
+              type="text"
+              className="border p-2 w-full mt-2"
+              value={formData.firstName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label>Last Name</label>
+            <input
+              name="lastName"
+              type="text"
+              className="border p-2 w-full mt-2"
+              value={formData.lastName}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
 
-                <div>
-                    <label>State</label>
-                    <input type="text" className="border p-2w-full mt-2" />
-                </div>
-            </div>
+        <div className="mt-4">
+          <label>Email</label>
+          <input
+            name="email"
+            type="email"
+            className="border p-2 w-full mt-2"
+            value={formData.email}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-            <div className="grid grid-cols-2 gap-4 mt-4">
-                <div>
-                    <label>Country</label>
-                    <input type="text" className="border p-2w-full mt-2" />
-                </div>
-            </div>
+        <h2 className="text-xl font-semibold mt-6">Pay With</h2>
+        <div className="mt-4">
+          <label>Card Number</label>
+          <input
+            name="cardNumber"
+            type="text"
+            className="border p-2 w-full mt-2"
+            value={formData.cardNumber}
+            onChange={handleChange}
+            required
+          />
+        </div>
 
-            {/* Submit Button */}
-            <button className="mt-6 bg-green-500 text-white py-2 px-4 rounded-md w-full">Confirm & Pay</button>
-        </form>
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <label>Expiration Date</label>
+            <input
+              name="expirationDate"
+              type="text"
+              className="border p-2 w-full mt-2"
+              value={formData.expirationDate}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label>CVV</label>
+            <input
+              name="cvv"
+              type="text"
+              className="border p-2 w-full mt-2"
+              value={formData.cvv}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <h2 className="text-xl font-semibold mt-6">Billing Address</h2>
+        <div className="mt-4">
+          <label>Street Address</label>
+          <input
+            name="streetAddress"
+            type="text"
+            className="border p-2 w-full mt-2"
+            value={formData.streetAddress}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mt-4">
+          <div>
+            <label>City</label>
+            <input
+              name="city"
+              type="text"
+              className="border p-2 w-full mt-2"
+              value={formData.city}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label>State</label>
+            <input
+              name="state"
+              type="text"
+              className="border p-2 w-full mt-2"
+              value={formData.state}
+              onChange={handleChange}
+              required
+            />
+          </div>
+        </div>
+
+        <div className="mt-4">
+          <label>Country</label>
+          <input
+            name="country"
+            type="text"
+            className="border p-2 w-full mt-2"
+            value={formData.country}
+            onChange={handleChange}
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          className="mt-6 bg-green-500 text-white py-2 px-4 rounded-md w-full"
+          disabled={loading}
+        >
+          {loading ? "Processing..." : "Confirm & Pay"}
+        </button>
+
+        {error && <p className="text-red-500 mt-2">{error}</p>}
+        {success && <p className="text-green-600 mt-2">{success}</p>}
+      </form>
     </div>
-);
+  );
+};
 
 export default BookingForm;
